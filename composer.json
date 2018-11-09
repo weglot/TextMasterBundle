@@ -1,0 +1,20 @@
+{
+  "name": "weglot/text-master-api",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Etienne Dhennin",
+      "email": "etienne@weglot.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=7.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Weglot\\TextMasterBundle\\": ""
+    }
+  }
+}

@@ -1,0 +1,12 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Weglot\TextMasterBundle\:
+        resource: '../../{Service}'
+
+    Weglot\TextMasterBundle\Service\TextMasterApi:
+        arguments:
+            $apiKey: '%textmaster_api_key%'
+            $apiSecret: '%textmaster_api_secret%'
