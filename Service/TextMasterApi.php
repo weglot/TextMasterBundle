@@ -49,9 +49,7 @@ class TextMasterApi
     public function initClient(string $env)
     {   
         $baseUri = self::BASE_TM_API_URL;
-        $baseUri .= $env === self::PROD_ENV ? self::API_URI : self::SANDBOX_API_URI;
-
-        $this->basicHeaders['base_uri'] = self::BASE_TM_API_URL.self::API_URI;
+        $this->basicHeaders['base_uri'] .= $env === self::PROD_ENV ? self::API_URI : self::SANDBOX_API_URI;
         $this->client = $this->createGuzzleClient($this->basicHeaders);    
     }
 
@@ -138,7 +136,7 @@ class TextMasterApi
 
         $decodedResponse = json_decode($response->getBody()->getContents(), true);
         foreach ($decodedResponse['errors'] as $type => $messagesArray) {
-            $errorMsg .= "Type of error: $type".$lineBreaker;
+            $errorMsg .= "Type of error: $type ".$lineBreaker;
             if (is_array($messagesArray)) {
                 foreach ($messagesArray as $msg) {
                     $errorMsg .= $msg.$lineBreaker;
