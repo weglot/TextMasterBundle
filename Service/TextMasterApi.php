@@ -26,6 +26,9 @@ class TextMasterApi
     const BASE_TM_API_URL = 'http://api.';
     const API_URI = 'textmaster.com/v1/';
     const SANDBOX_API_URI = 'textmastersandbox.com/v1/';
+    
+    const STAGING_ENV = 'staging';
+    const PROD_ENV = 'production'
 
     const COMPLETED_PROJECT_STATUS = 'completed';
 
@@ -41,8 +44,15 @@ class TextMasterApi
     {
         $this->basicHeaders['key'] = $apiKey;
         $this->basicHeaders['secret'] = $apiSecret;
-        $this->basicHeaders['base_uri'] = self::BASE_TM_API_URL.self::SANDBOX_API_URI;
-        $this->client = $this->createGuzzleClient($this->basicHeaders);
+    }
+
+    public function initClient(string $env)
+    {   
+        $baseUri = self::BASE_TM_API_URL;
+        $baseUri .= $env === self::PROD_ENV ? self::API_URI : self::SANDBOX_API_URI;
+
+        $this->basicHeaders['base_uri'] = self::BASE_TM_API_URL.self::API_URI;
+        $this->client = $this->createGuzzleClient($this->basicHeaders);    
     }
 
     /**
