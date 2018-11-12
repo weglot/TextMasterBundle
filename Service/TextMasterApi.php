@@ -71,7 +71,7 @@ class TextMasterApi
         $routeParams = self::ROUTES['getProject'];
         $url = $this->formatUrl($routeParams['url'], ['{projectId}' => $textMasterProjectId]);
 
-        return $this->client->request($url, $routeParams['method']);
+        return $this->request($url, $routeParams['method']);
     }
 
     /**
