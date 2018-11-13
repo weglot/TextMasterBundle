@@ -27,7 +27,7 @@ class Configuration implements ConfigurationInterface
             ->children()
             ->scalarNode('api_key')->isRequired()->end()
             ->scalarNode('api_secret')->isRequired()->end()
-            ->enumMode('textmaster_env')
+            ->enumNode('textmaster_env')
             ->values('staging', 'production')
             ->isRequired()
             ->end()
