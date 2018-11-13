@@ -34,24 +34,27 @@ class TextMasterApi
 
     const ROUTES = [
         'getProject' => ['method' => 'GET', 'url' => 'clients/projects/{projectId}'],
+        'getProjectQuotation' => ['method' => 'GET', 'url' => 'clients/projects/quotation'],
         'createProject' => ['method' => 'POST', 'url' => 'clients/projects'],
         'launchProject' => ['method' => 'PUT', 'url' => 'clients/projects/{projectId}/launch'],
         'addDocuments' => ['method' => 'POST', 'url' => 'clients/projects/{projectId}/batch/documents'],
         'completeDocument' => ['method' => 'PUT', 'url' => 'clients/projects/{projectId}/documents/{documentId}/complete'],
     ];
 
-    public function __construct(string $apiKey, string $apiSecret)
+    /**
+     * TextMasterApi constructor.
+     * @param string $apiKey
+     * @param string $apiSecret
+     * @param string $textmasterEnv
+     */
+    public function __construct(string $apiKey, string $apiSecret, string $textmasterEnv)
     {
+        $baseUri = self::BASE_TM_API_URL;
+        $baseUri .= $textmasterEnv === self::PROD_ENV ? self::API_URI : self::SANDBOX_API_URI;
         $this->basicHeaders['key'] = $apiKey;
         $this->basicHeaders['secret'] = $apiSecret;
-    }
-
-    public function initClient(string $env)
-    {   
-        $baseUri = self::BASE_TM_API_URL;
-        $baseUri .= $env === self::PROD_ENV ? self::API_URI : self::SANDBOX_API_URI;
         $this->basicHeaders['base_uri'] = $baseUri;
-        $this->client = $this->createGuzzleClient($this->basicHeaders);    
+        $this->client = $this->createGuzzleClient($this->basicHeaders);
     }
 
     /**
@@ -97,6 +100,19 @@ class TextMasterApi
 
         return $this->request($url, $routeParams['method']);
     }
+
+    /**
+     * @todo finalize
+     *
+     * @param array $project
+     * @return Response
+     */
+//    public function getProjectQuotation(array $project): Response
+//    {
+//        $routeParams = self::ROUTES['getProjectQuotation'];
+//
+//        return $this->request($routeParams['url'], $routeParams['method'], ['project' => $project]);
+//    }
 
     /**
      * @param string $textMasterProjectId

@@ -25,6 +25,7 @@ class WeglotTextMasterExtension extends Extension
 
         $container->setParameter('weglot_textmaster_api.api_key', $config['api_key']);
         $container->setParameter('weglot_textmaster_api.api_secret', $config['api_secret']);
+        $container->setParameter('weglot_textmaster_api.textmaster_env', $config['textmaster_env']);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
