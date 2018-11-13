@@ -49,7 +49,8 @@ class TextMasterApi
     public function initClient(string $env)
     {   
         $baseUri = self::BASE_TM_API_URL;
-        $this->basicHeaders['base_uri'] .= $env === self::PROD_ENV ? self::API_URI : self::SANDBOX_API_URI;
+        $baseUri .= $env === self::PROD_ENV ? self::API_URI : self::SANDBOX_API_URI;
+        $this->basicHeaders['base_uri'] = $baseUri;
         $this->client = $this->createGuzzleClient($this->basicHeaders);    
     }
 
