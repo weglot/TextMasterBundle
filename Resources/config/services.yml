@@ -10,3 +10,4 @@ services:
         arguments:
             $apiKey: '%textmaster_api_key%'
             $apiSecret: '%textmaster_api_secret%'
+            $textmasterEnv: '%textmaster_env%'
