@@ -102,17 +102,18 @@ class TextMasterApi
     }
 
     /**
-     * @todo finalize
+     * @return Response
      *
      * @param array $project
-     * @return Response
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-//    public function getProjectQuotation(array $project): Response
-//    {
-//        $routeParams = self::ROUTES['getProjectQuotation'];
-//
-//        return $this->request($routeParams['url'], $routeParams['method'], ['project' => $project]);
-//    }
+    public function getProjectQuotation(array $project): Response
+    {
+        $routeParams = self::ROUTES['getProjectQuotation'];
+
+        return $this->request($routeParams['url'], $routeParams['method'], ['project' => $project]);
+    }
 
     /**
      * @param string $textMasterProjectId
