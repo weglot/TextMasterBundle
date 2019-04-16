@@ -23,9 +23,9 @@ class TextMasterApi
     private $client;
     private $basicHeaders = [];
 
-    const BASE_TM_API_URL = 'http://api.';
+    const BASE_TM_API_URL = 'https://api.';
     const API_URI = 'textmaster.com/v1/';
-    const SANDBOX_API_URI = 'textmastersandbox.com/v1/';
+    const SANDBOX_API_URI = 'textmasterstaging.com/v1/';
 
     const STAGING_ENV = 'staging';
     const PROD_ENV = 'production';
