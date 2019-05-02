@@ -37,12 +37,14 @@ class TextMasterApi
         'getProjectQuotation' => ['method' => 'GET', 'url' => 'clients/projects/quotation'],
         'createProject' => ['method' => 'POST', 'url' => 'clients/projects'],
         'launchProject' => ['method' => 'PUT', 'url' => 'clients/projects/{projectId}/launch'],
-        'addDocuments' => ['method' => 'POST', 'url' => 'clients/projects/{projectId}/batch/documents'],
+        'addDocument' => ['method' => 'POST', 'url' => 'clients/projects/{projectId}/documents'],
         'completeDocument' => ['method' => 'PUT', 'url' => 'clients/projects/{projectId}/documents/{documentId}/complete'],
+        'getDocument' => ['method' => 'GET', 'url' => 'clients/projects/{projectId}/documents/{documentId}']
     ];
 
     /**
      * TextMasterApi constructor.
+     *
      * @param string $apiKey
      * @param string $apiSecret
      * @param string $textmasterEnv
@@ -50,7 +52,8 @@ class TextMasterApi
     public function __construct(string $apiKey, string $apiSecret, string $textmasterEnv)
     {
         $baseUri = self::BASE_TM_API_URL;
-        $baseUri .= $textmasterEnv === self::PROD_ENV ? self::API_URI : self::SANDBOX_API_URI;
+        $baseUri .= self::PROD_ENV === $textmasterEnv ? self::API_URI : self::SANDBOX_API_URI;
+
         $this->basicHeaders['key'] = $apiKey;
         $this->basicHeaders['secret'] = $apiSecret;
         $this->basicHeaders['base_uri'] = $baseUri;
@@ -104,8 +107,6 @@ class TextMasterApi
     /**
      * @return Response
      *
-     * @param array $project
-     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getProjectQuotation(array $project): Response
@@ -125,10 +126,24 @@ class TextMasterApi
      */
     public function addDocumentsToProject(string $textMasterProjectId, array $documents): Response
     {
-        $routeParams = self::ROUTES['addDocuments'];
+        $routeParams = self::ROUTES['addDocument'];
         $url = $this->formatUrl($routeParams['url'], ['{projectId}' => $textMasterProjectId]);
 
-        return $this->request($url, $routeParams['method'], ['documents' => $documents]);
+        return $this->request($url, $routeParams['method'], ['document' => $documents]);
+    }
+
+    /**
+     * @param string $textMasterProjectId
+     * @param string $textMasterDocumentId
+     * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getDocument(string $textMasterProjectId, string $textMasterDocumentId): Response
+    {
+        $routeParams = self::ROUTES['getDocument'];
+        $url = $this->formatUrl($routeParams['url'], ['{projectId}' => $textMasterProjectId, '{documentId}' => $textMasterDocumentId]);
+
+        return $this->request($url, $routeParams['method']);
     }
 
     /**
@@ -147,6 +162,11 @@ class TextMasterApi
         return $this->request($url, $routeParams['method']);
     }
 
+    /**
+     * @param Response $response
+     * @param string $format
+     * @return string
+     */
     public function extractErrorFromResponse(Response $response, string $format = 'html'): string
     {
         $errorMsg = '';
@@ -207,6 +227,11 @@ class TextMasterApi
         return new Client($options);
     }
 
+    /**
+     * @param string $url
+     * @param array $parameters
+     * @return string
+     */
     private function formatUrl(string $url, array $parameters): string
     {
         foreach ($parameters as $placeholder => $value) {
