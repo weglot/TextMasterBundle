@@ -39,7 +39,8 @@ class TextMasterApi
         'launchProject' => ['method' => 'PUT', 'url' => 'clients/projects/{projectId}/launch'],
         'addDocument' => ['method' => 'POST', 'url' => 'clients/projects/{projectId}/documents'],
         'completeDocument' => ['method' => 'PUT', 'url' => 'clients/projects/{projectId}/documents/{documentId}/complete'],
-        'getDocument' => ['method' => 'GET', 'url' => 'clients/projects/{projectId}/documents/{documentId}']
+        'getDocument' => ['method' => 'GET', 'url' => 'clients/projects/{projectId}/documents/{documentId}'],
+        'getAbilities' => ['mehtod'=> 'GET', 'url' => 'clients/abilities?activity=translation&page={page}']
     ];
 
     /**
@@ -114,6 +115,19 @@ class TextMasterApi
         $routeParams = self::ROUTES['getProjectQuotation'];
 
         return $this->request($routeParams['url'], $routeParams['method'], ['project' => $project]);
+    }
+
+    /**
+     * @return Response
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getAbilities(string $page): Response
+    {
+        $routeParams = self::ROUTES['getAbilities'];
+        $url = $this->formatUrl($routeParams['url'], ['{page}' => $page]);
+
+        return $this->request($url, $routeParams['method']);
     }
 
     /**
@@ -215,10 +229,10 @@ class TextMasterApi
             $date = new \DateTime('now', new \DateTimeZone('UTC'));
 
             return $request
-                    ->withHeader('Apikey', $options['key'])
-                    ->withHeader('Date', $date->format('Y-m-d H:i:s'))
-                    ->withHeader('Signature', sha1($options['secret'].$date->format('Y-m-d H:i:s')))
-            ;
+                ->withHeader('Apikey', $options['key'])
+                ->withHeader('Date', $date->format('Y-m-d H:i:s'))
+                ->withHeader('Signature', sha1($options['secret'].$date->format('Y-m-d H:i:s')))
+                ;
         }));
         unset($options['key']);
         unset($options['secret']);
