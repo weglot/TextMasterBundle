@@ -40,7 +40,7 @@ class TextMasterApi
         'addDocument' => ['method' => 'POST', 'url' => 'clients/projects/{projectId}/documents'],
         'completeDocument' => ['method' => 'PUT', 'url' => 'clients/projects/{projectId}/documents/{documentId}/complete'],
         'getDocument' => ['method' => 'GET', 'url' => 'clients/projects/{projectId}/documents/{documentId}'],
-        'getAbilities' => ['mehtod'=> 'GET', 'url' => 'clients/abilities?activity=translation&page={page}']
+        'getAbilities' => ['method'=> 'GET', 'url' => 'clients/abilities?activity=translation&page={page}']
     ];
 
     /**
