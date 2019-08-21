@@ -40,7 +40,8 @@ class TextMasterApi
         'addDocument' => ['method' => 'POST', 'url' => 'clients/projects/{projectId}/documents'],
         'completeDocument' => ['method' => 'PUT', 'url' => 'clients/projects/{projectId}/documents/{documentId}/complete'],
         'getDocument' => ['method' => 'GET', 'url' => 'clients/projects/{projectId}/documents/{documentId}'],
-        'getAbilities' => ['method'=> 'GET', 'url' => 'clients/abilities?activity=translation&page={page}']
+        'getAbilities' => ['method'=> 'GET', 'url' => 'clients/abilities?activity=translation&page={page}'],
+        'getCategories' => ['method' => 'GET', 'url' => 'public/categories']
     ];
 
     /**
@@ -253,5 +254,18 @@ class TextMasterApi
         }
 
         return $url;
+    }
+
+    /**
+     * @return Response
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getCategories(): Response
+    {
+        $routeParams = self::ROUTES['getCategories'];
+        $url = $this->formatUrl($routeParams['url'],[]);
+
+        return $this->request($url, $routeParams['method']);
     }
 }
