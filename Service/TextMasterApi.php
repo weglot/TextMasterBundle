@@ -38,6 +38,7 @@ class TextMasterApi
         'getAbilities' => ['method'=> 'GET', 'url' => 'clients/abilities?activity=translation&page={page}'],
         'getAuthorsForProject' => ['method' => 'GET', 'url' => 'clients/projects/{projectId}/my_authors?status={status}'],
         'getCategories' => ['method' => 'GET', 'url' => 'public/categories'],
+        'setOptions' => ['method' => 'PUT', 'url' => 'clients/projects/{projectId}/activate_tm_options']
     ];
 
     /**
@@ -74,21 +75,6 @@ class TextMasterApi
 
     /**
      * @param string $textMasterProjectId
-     *
-     * @return Response
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getProject(string $textMasterProjectId): Response
-    {
-        $routeParams = self::ROUTES['getProject'];
-        $url = $this->formatUrl($routeParams['url'], ['{projectId}' => $textMasterProjectId]);
-
-        return $this->request($url, $routeParams['method']);
-    }
-
-    /**
-     * @param string $textMasterProjectId
      * @param array $options
      * @return Response
      * @throws \GuzzleHttp\Exception\GuzzleException
@@ -117,18 +103,6 @@ class TextMasterApi
     }
 
     /**
-     * @return Response
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getProjectQuotation(array $project): Response
-    {
-        $routeParams = self::ROUTES['getProjectQuotation'];
-
-        return $this->request($routeParams['url'], $routeParams['method'], ['project' => $project]);
-    }
-
-    /**
      * @param string $textMasterProjectId
      * @param array  $documents
      *
@@ -142,6 +116,45 @@ class TextMasterApi
         $url = $this->formatUrl($routeParams['url'], ['{projectId}' => $textMasterProjectId]);
 
         return $this->request($url, $routeParams['method'], ['document' => $documents]);
+    }
+
+    /**
+     * @param string $documentId
+     * @param string $textMasterProjectId
+     *
+     * @return Response
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function completeDocument(string $documentId, string $textMasterProjectId): Response
+    {
+        $routeParams = self::ROUTES['completeDocument'];
+        $url = $this->formatUrl($routeParams['url'], ['{projectId}' => $textMasterProjectId, '{documentId}' => $documentId]);
+
+        return $this->request($url, $routeParams['method']);
+    }
+
+    public function setProjectOptions(string $textMasterProjectId, array $options): Response
+    {
+        $routeParams = self::ROUTES['setOptions'];
+        $url = $this->formatUrl($routeParams['url'], ['{projectId}' => $textMasterProjectId]);
+
+        return $this->request($url, $routeParams['method'], ['project' => $options]);
+    }
+
+    /**
+     * @param string $textMasterProjectId
+     *
+     * @return Response
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getProject(string $textMasterProjectId): Response
+    {
+        $routeParams = self::ROUTES['getProject'];
+        $url = $this->formatUrl($routeParams['url'], ['{projectId}' => $textMasterProjectId]);
+
+        return $this->request($url, $routeParams['method']);
     }
 
     /**
@@ -159,19 +172,15 @@ class TextMasterApi
     }
 
     /**
-     * @param string $documentId
-     * @param string $textMasterProjectId
-     *
      * @return Response
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function completeDocument(string $documentId, string $textMasterProjectId): Response
+    public function getProjectQuotation(array $project): Response
     {
-        $routeParams = self::ROUTES['completeDocument'];
-        $url = $this->formatUrl($routeParams['url'], ['{projectId}' => $textMasterProjectId, '{documentId}' => $documentId]);
+        $routeParams = self::ROUTES['getProjectQuotation'];
 
-        return $this->request($url, $routeParams['method']);
+        return $this->request($routeParams['url'], $routeParams['method'], ['project' => $project]);
     }
 
     /**
