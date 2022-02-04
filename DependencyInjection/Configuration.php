@@ -20,10 +20,10 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder('textmaster_api');
-        $rootNode = $treeBuilder->root('weglot_textmaster_api');
+        $treeBuilder = new TreeBuilder('weglot_textmaster_api');
 
-        $rootNode
+
+        $treeBuilder->getRootNode()
             ->children()
             ->scalarNode('api_key')->isRequired()->end()
             ->scalarNode('api_secret')->isRequired()->end()
