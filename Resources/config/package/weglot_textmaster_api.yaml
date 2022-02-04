@@ -1,0 +1,4 @@
+weglot_textmaster_api:
+  api_key: '%textmaster_api_key%'
+  api_secret: '%textmaster_api_secret%'
+  textmaster_env: '%textmaster_env%'
