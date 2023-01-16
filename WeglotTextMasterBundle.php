@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: etienne
- * Date: 29/10/2018
- * Time: 11:30.
- */
 
 namespace Weglot\TextMasterBundle;
 

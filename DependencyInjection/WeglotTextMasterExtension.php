@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: etienne
- * Date: 05/11/2018
- * Time: 15:38.
- */
 
 namespace Weglot\TextMasterBundle\DependencyInjection;
 
@@ -15,10 +9,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class WeglotTextMasterExtension extends Extension
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
@@ -31,7 +22,7 @@ class WeglotTextMasterExtension extends Extension
         $loader->load('services.yml');
     }
 
-    public function getAlias()
+    public function getAlias(): string
     {
         return 'weglot_textmaster_api';
     }
