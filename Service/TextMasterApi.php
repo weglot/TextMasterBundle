@@ -3,6 +3,7 @@
 namespace Weglot\TextMasterBundle\Service;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
@@ -13,20 +14,21 @@ use Psr\Http\Message\RequestInterface;
 
 class TextMasterApi
 {
-    /** Client Client */
+    /** @var Client */
     private $client;
+    /** @var array */
     private $basicHeaders = [];
 
-    const BASE_TM_API_URL = 'https://api.';
-    const API_URI = 'textmaster.com/v1/';
-    const SANDBOX_API_URI = 'textmasterstaging.com/v1/';
+    public const BASE_TM_API_URL = 'https://api.';
+    public const API_URI = 'textmaster.com/v1/';
+    public const SANDBOX_API_URI = 'textmasterstaging.com/v1/';
 
-    const STAGING_ENV = 'staging';
-    const PROD_ENV = 'production';
+    public const STAGING_ENV = 'staging';
+    public const PROD_ENV = 'production';
 
-    const COMPLETED_PROJECT_STATUS = 'completed';
+    public const COMPLETED_PROJECT_STATUS = 'completed';
 
-    const ROUTES = [
+    public const ROUTES = [
         'getProject' => ['method' => 'GET', 'url' => 'clients/projects/{projectId}'],
         'getProjectQuotation' => ['method' => 'GET', 'url' => 'clients/projects/quotation'],
         'createProject' => ['method' => 'POST', 'url' => 'clients/projects'],
@@ -41,13 +43,6 @@ class TextMasterApi
         'setOptions' => ['method' => 'PUT', 'url' => 'clients/projects/{projectId}/activate_tm_options']
     ];
 
-    /**
-     * TextMasterApi constructor.
-     *
-     * @param string $apiKey
-     * @param string $apiSecret
-     * @param string $textmasterEnv
-     */
     public function __construct(string $apiKey, string $apiSecret, string $textmasterEnv)
     {
         $baseUri = self::BASE_TM_API_URL;
@@ -60,11 +55,7 @@ class TextMasterApi
     }
 
     /**
-     * @param array $project
-     *
-     * @return Response
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function createProject(array $project): Response
     {
@@ -74,10 +65,7 @@ class TextMasterApi
     }
 
     /**
-     * @param string $textMasterProjectId
-     * @param array $options
-     * @return Response
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function updateProject(string $textMasterProjectId, array $options): Response
     {
@@ -88,11 +76,7 @@ class TextMasterApi
     }
 
     /**
-     * @param string $textMasterProjectId
-     *
-     * @return Response
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function launchProject(string $textMasterProjectId): Response
     {
@@ -103,12 +87,7 @@ class TextMasterApi
     }
 
     /**
-     * @param string $textMasterProjectId
-     * @param array  $documents
-     *
-     * @return mixed|\Psr\Http\Message\ResponseInterface
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function addDocumentsToProject(string $textMasterProjectId, array $documents): Response
     {
@@ -119,12 +98,7 @@ class TextMasterApi
     }
 
     /**
-     * @param string $documentId
-     * @param string $textMasterProjectId
-     *
-     * @return Response
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function completeDocument(string $documentId, string $textMasterProjectId): Response
     {
@@ -143,11 +117,7 @@ class TextMasterApi
     }
 
     /**
-     * @param string $textMasterProjectId
-     *
-     * @return Response
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function getProject(string $textMasterProjectId): Response
     {
@@ -158,10 +128,7 @@ class TextMasterApi
     }
 
     /**
-     * @param string $textMasterProjectId
-     * @param string $textMasterDocumentId
-     * @return Response
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function getDocument(string $textMasterProjectId, string $textMasterDocumentId): Response
     {
@@ -172,9 +139,7 @@ class TextMasterApi
     }
 
     /**
-     * @return Response
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function getProjectQuotation(array $project): Response
     {
@@ -184,9 +149,7 @@ class TextMasterApi
     }
 
     /**
-     * @return Response
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function getCategories(): Response
     {
@@ -197,9 +160,7 @@ class TextMasterApi
     }
 
     /**
-     * @return Response
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function getAbilities(string $page): Response
     {
@@ -210,12 +171,7 @@ class TextMasterApi
     }
 
     /**
-     * @param string textMasterProjectId
-     * @param string $status
-     *
-     * @return Response
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function getAuthorsForProject(string $textMasterProjectId, string $status = 'my_textmaster'): Response
     {
@@ -225,11 +181,6 @@ class TextMasterApi
         return $this->request($routeParams['url'], $routeParams['method']);
     }
 
-    /**
-     * @param Response $response
-     * @param string $format
-     * @return string
-     */
     public function extractErrorFromResponse(Response $response, string $format = 'html'): string
     {
         $errorMsg = '';
@@ -249,13 +200,7 @@ class TextMasterApi
     }
 
     /**
-     * @param string $url
-     * @param string $method
-     * @param array  $payload
-     *
-     * @return Response
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     private function request(string $url, string $method, array $payload = []): Response
     {
@@ -265,11 +210,6 @@ class TextMasterApi
         return $response;
     }
 
-    /**
-     * @param array $options
-     *
-     * @return Client
-     */
     private function createGuzzleClient(array $options): Client
     {
         $stack = new HandlerStack();
@@ -290,11 +230,6 @@ class TextMasterApi
         return new Client($options);
     }
 
-    /**
-     * @param string $url
-     * @param array $parameters
-     * @return string
-     */
     private function formatUrl(string $url, array $parameters): string
     {
         foreach ($parameters as $placeholder => $value) {
