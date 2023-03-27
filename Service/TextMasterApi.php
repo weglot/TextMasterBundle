@@ -162,7 +162,7 @@ class TextMasterApi
     /**
      * @throws GuzzleException
      */
-    public function getAbilities(string $page): Response
+    public function getAbilities(int $page): Response
     {
         $routeParams = self::ROUTES['getAbilities'];
         $url = $this->formatUrl($routeParams['url'],['{page}' => $page]);
