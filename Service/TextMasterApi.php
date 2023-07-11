@@ -212,8 +212,7 @@ class TextMasterApi
 
     private function createGuzzleClient(array $options): Client
     {
-        $stack = new HandlerStack();
-        $stack->setHandler(new CurlHandler());
+        $stack = HandlerStack::create();
         $stack->push(Middleware::mapRequest(function (RequestInterface $request) use ($options) {
             $date = new \DateTime('now', new \DateTimeZone('UTC'));
 
