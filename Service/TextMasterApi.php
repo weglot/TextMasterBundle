@@ -108,6 +108,9 @@ class TextMasterApi
         return $this->request($url, $routeParams['method']);
     }
 
+    /**
+     * @throws GuzzleException
+     */
     public function setProjectOptions(string $textMasterProjectId, array $options): Response
     {
         $routeParams = self::ROUTES['setOptions'];
