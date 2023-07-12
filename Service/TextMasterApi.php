@@ -156,9 +156,8 @@ class TextMasterApi
     public function getCategories(): Response
     {
         $routeParams = self::ROUTES['getCategories'];
-        $url = $this->formatUrl($routeParams['url'],[]);
 
-        return $this->request($url, $routeParams['method']);
+        return $this->request($routeParams['url'], $routeParams['method']);
     }
 
     /**
@@ -180,7 +179,7 @@ class TextMasterApi
         $routeParams = self::ROUTES['getAuthorsForProject'];
         $url = $this->formatUrl($routeParams['url'], ['{projectId}' => $textMasterProjectId, '{status}' => $status]);
 
-        return $this->request($routeParams['url'], $routeParams['method']);
+        return $this->request($url, $routeParams['method']);
     }
 
     public function extractErrorFromResponse(Response $response, string $format = 'html'): string
@@ -207,9 +206,8 @@ class TextMasterApi
     private function request(string $url, string $method, array $payload = []): Response
     {
         $request = new Request($method, $url);
-        $response = $this->client->send($request, [RequestOptions::JSON => $payload]);
 
-        return $response;
+        return $this->client->send($request, [RequestOptions::JSON => $payload]);
     }
 
     private function createGuzzleClient(array $options): Client
