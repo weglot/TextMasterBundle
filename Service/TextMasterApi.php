@@ -7,9 +7,9 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 class TextMasterApi
 {
@@ -56,7 +56,7 @@ class TextMasterApi
     /**
      * @throws GuzzleException
      */
-    public function createProject(array $project): Response
+    public function createProject(array $project): ResponseInterface
     {
         $routeParams = self::ROUTES['createProject'];
 
@@ -66,18 +66,18 @@ class TextMasterApi
     /**
      * @throws GuzzleException
      */
-    public function updateProject(string $textMasterProjectId, array $options): Response
+    public function updateProject(string $textMasterProjectId, array $options): ResponseInterface
     {
         $routeParams = self::ROUTES['updateProject'];
         $url = $this->formatUrl($routeParams['url'], ['{projectId}' => $textMasterProjectId]);
 
-        return $this->request($routeParams['url'], $routeParams['method'], ['project' => $options]);
+        return $this->request($url, $routeParams['method'], ['project' => $options]);
     }
 
     /**
      * @throws GuzzleException
      */
-    public function launchProject(string $textMasterProjectId): Response
+    public function launchProject(string $textMasterProjectId): ResponseInterface
     {
         $routeParams = self::ROUTES['launchProject'];
         $url = $this->formatUrl($routeParams['url'], ['{projectId}' => $textMasterProjectId]);
@@ -88,7 +88,7 @@ class TextMasterApi
     /**
      * @throws GuzzleException
      */
-    public function addDocumentsToProject(string $textMasterProjectId, array $documents): Response
+    public function addDocumentsToProject(string $textMasterProjectId, array $documents): ResponseInterface
     {
         $routeParams = self::ROUTES['addDocument'];
         $url = $this->formatUrl($routeParams['url'], ['{projectId}' => $textMasterProjectId]);
@@ -99,7 +99,7 @@ class TextMasterApi
     /**
      * @throws GuzzleException
      */
-    public function completeDocument(string $documentId, string $textMasterProjectId): Response
+    public function completeDocument(string $documentId, string $textMasterProjectId): ResponseInterface
     {
         $routeParams = self::ROUTES['completeDocument'];
         $url = $this->formatUrl($routeParams['url'], ['{projectId}' => $textMasterProjectId, '{documentId}' => $documentId]);
@@ -110,7 +110,7 @@ class TextMasterApi
     /**
      * @throws GuzzleException
      */
-    public function setProjectOptions(string $textMasterProjectId, array $options): Response
+    public function setProjectOptions(string $textMasterProjectId, array $options): ResponseInterface
     {
         $routeParams = self::ROUTES['setOptions'];
         $url = $this->formatUrl($routeParams['url'], ['{projectId}' => $textMasterProjectId]);
@@ -121,7 +121,7 @@ class TextMasterApi
     /**
      * @throws GuzzleException
      */
-    public function getProject(string $textMasterProjectId): Response
+    public function getProject(string $textMasterProjectId): ResponseInterface
     {
         $routeParams = self::ROUTES['getProject'];
         $url = $this->formatUrl($routeParams['url'], ['{projectId}' => $textMasterProjectId]);
@@ -132,7 +132,7 @@ class TextMasterApi
     /**
      * @throws GuzzleException
      */
-    public function getDocument(string $textMasterProjectId, string $textMasterDocumentId): Response
+    public function getDocument(string $textMasterProjectId, string $textMasterDocumentId): ResponseInterface
     {
         $routeParams = self::ROUTES['getDocument'];
         $url = $this->formatUrl($routeParams['url'], ['{projectId}' => $textMasterProjectId, '{documentId}' => $textMasterDocumentId]);
@@ -143,7 +143,7 @@ class TextMasterApi
     /**
      * @throws GuzzleException
      */
-    public function getProjectQuotation(array $project): Response
+    public function getProjectQuotation(array $project): ResponseInterface
     {
         $routeParams = self::ROUTES['getProjectQuotation'];
 
@@ -153,7 +153,7 @@ class TextMasterApi
     /**
      * @throws GuzzleException
      */
-    public function getCategories(): Response
+    public function getCategories(): ResponseInterface
     {
         $routeParams = self::ROUTES['getCategories'];
 
@@ -163,7 +163,7 @@ class TextMasterApi
     /**
      * @throws GuzzleException
      */
-    public function getAbilities(string $page): Response
+    public function getAbilities(string $page): ResponseInterface
     {
         $routeParams = self::ROUTES['getAbilities'];
         $url = $this->formatUrl($routeParams['url'],['{page}' => $page]);
@@ -174,7 +174,7 @@ class TextMasterApi
     /**
      * @throws GuzzleException
      */
-    public function getAuthorsForProject(string $textMasterProjectId, string $status = 'my_textmaster'): Response
+    public function getAuthorsForProject(string $textMasterProjectId, string $status = 'my_textmaster'): ResponseInterface
     {
         $routeParams = self::ROUTES['getAuthorsForProject'];
         $url = $this->formatUrl($routeParams['url'], ['{projectId}' => $textMasterProjectId, '{status}' => $status]);
@@ -182,7 +182,7 @@ class TextMasterApi
         return $this->request($url, $routeParams['method']);
     }
 
-    public function extractErrorFromResponse(Response $response, string $format = 'html'): string
+    public function extractErrorFromResponse(ResponseInterface $response, string $format = 'html'): string
     {
         $errorMsg = '';
         $lineBreaker = 'html' === $format ? '</br>' : "\n";
@@ -203,7 +203,7 @@ class TextMasterApi
     /**
      * @throws GuzzleException
      */
-    private function request(string $url, string $method, array $payload = []): Response
+    private function request(string $url, string $method, array $payload = []): ResponseInterface
     {
         $request = new Request($method, $url);
 
