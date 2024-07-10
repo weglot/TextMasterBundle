@@ -180,6 +180,9 @@ class TextMasterApi
         return $this->request($url, $routeParams['method']);
     }
 
+    /**
+     * @throws \RuntimeException
+     */
     public function extractErrorFromResponse(ResponseInterface $response, string $format = 'html'): string
     {
         $errorMsg = '';
