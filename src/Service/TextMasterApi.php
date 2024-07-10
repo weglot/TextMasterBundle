@@ -13,10 +13,8 @@ use Psr\Http\Message\ResponseInterface;
 
 class TextMasterApi
 {
-    /** @var Client */
-    private $client;
-    /** @var array */
-    private $basicHeaders = [];
+    private Client $client;
+    private array $basicHeaders = [];
 
     public const BASE_TM_API_URL = 'https://api.';
     public const API_URI = 'textmaster.com/v1/';
