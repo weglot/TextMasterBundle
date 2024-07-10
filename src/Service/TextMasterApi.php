@@ -222,8 +222,8 @@ class TextMasterApi
                 ->withHeader('Signature', sha1($options['secret'].$date->format('Y-m-d H:i:s')))
                 ;
         }));
-        unset($options['key']);
-        unset($options['secret']);
+
+        unset($options['key'], $options['secret']);
         $options = array_merge($options, ['handler' => $stack]);
 
         return new Client($options);

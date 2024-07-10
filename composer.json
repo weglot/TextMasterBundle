@@ -20,7 +20,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Weglot\\TextMasterBundle\\": ""
+      "Weglot\\TextMasterBundle\\": "src/"
     }
   }
 }
