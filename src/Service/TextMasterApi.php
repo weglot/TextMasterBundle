@@ -190,15 +190,25 @@ class TextMasterApi
         return $this->request($url, $routeParams['method']);
     }
 
-    /**
-     * @throws \RuntimeException
-     */
     public function extractErrorFromResponse(ResponseInterface $response, string $format = 'html'): string
     {
         $errorMsg = '';
         $lineBreaker = 'html' === $format ? '</br>' : "\n";
 
-        $decodedResponse = json_decode($response->getBody()->getContents(), true);
+        try {
+            $decodedResponse = json_decode($response->getBody()->getContents(), true, 512, \JSON_THROW_ON_ERROR);
+        } catch (\Exception) {
+            return $errorMsg;
+        }
+
+        if (
+            !\is_array($decodedResponse)
+            || !isset($decodedResponse['errors'])
+            || !\is_iterable($decodedResponse['errors'])
+        ) {
+            return $errorMsg;
+        }
+
         foreach ($decodedResponse['errors'] as $type => $messagesArray) {
             $errorMsg .= "Type of error: $type ".$lineBreaker;
             if (is_array($messagesArray)) {
@@ -224,7 +234,7 @@ class TextMasterApi
     }
 
     /**
-     * @param array<string, mixed> $options
+     * @param array{key: string, secret: string, base_uri: string} $options
      */
     private function createGuzzleClient(array $options): Client
     {
