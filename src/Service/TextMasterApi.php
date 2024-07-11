@@ -13,10 +13,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class TextMasterApi
 {
-    /** @var Client */
-    private $client;
-    /** @var array */
-    private $basicHeaders = [];
+    private Client $client;
 
     public const BASE_TM_API_URL = 'https://api.';
     public const API_URI = 'textmaster.com/v1/';
@@ -47,13 +44,16 @@ class TextMasterApi
         $baseUri = self::BASE_TM_API_URL;
         $baseUri .= self::PROD_ENV === $textmasterEnv ? self::API_URI : self::SANDBOX_API_URI;
 
-        $this->basicHeaders['key'] = $apiKey;
-        $this->basicHeaders['secret'] = $apiSecret;
-        $this->basicHeaders['base_uri'] = $baseUri;
-        $this->client = $this->createGuzzleClient($this->basicHeaders);
+        $this->client = $this->createGuzzleClient([
+            'key' => $apiKey,
+            'secret' => $apiSecret,
+            'base_uri' => $baseUri,
+        ]);
     }
 
     /**
+     * @param array<string, mixed> $project
+     *
      * @throws GuzzleException
      */
     public function createProject(array $project): ResponseInterface
@@ -64,14 +64,16 @@ class TextMasterApi
     }
 
     /**
+     * @param array<string, mixed> $project
+     *
      * @throws GuzzleException
      */
-    public function updateProject(string $textMasterProjectId, array $options): ResponseInterface
+    public function updateProject(string $textMasterProjectId, array $project): ResponseInterface
     {
         $routeParams = self::ROUTES['updateProject'];
         $url = $this->formatUrl($routeParams['url'], ['{projectId}' => $textMasterProjectId]);
 
-        return $this->request($url, $routeParams['method'], ['project' => $options]);
+        return $this->request($url, $routeParams['method'], ['project' => $project]);
     }
 
     /**
@@ -86,6 +88,8 @@ class TextMasterApi
     }
 
     /**
+     * @param array<string, mixed> $documents
+     *
      * @throws GuzzleException
      */
     public function addDocumentsToProject(string $textMasterProjectId, array $documents): ResponseInterface
@@ -108,14 +112,16 @@ class TextMasterApi
     }
 
     /**
+     * @param array<string, mixed> $project
+     *
      * @throws GuzzleException
      */
-    public function setProjectOptions(string $textMasterProjectId, array $options): ResponseInterface
+    public function setProjectOptions(string $textMasterProjectId, array $project): ResponseInterface
     {
         $routeParams = self::ROUTES['setOptions'];
         $url = $this->formatUrl($routeParams['url'], ['{projectId}' => $textMasterProjectId]);
 
-        return $this->request($url, $routeParams['method'], ['project' => $options]);
+        return $this->request($url, $routeParams['method'], ['project' => $project]);
     }
 
     /**
@@ -141,6 +147,8 @@ class TextMasterApi
     }
 
     /**
+     * @param array<string, mixed> $project
+     *
      * @throws GuzzleException
      */
     public function getProjectQuotation(array $project): ResponseInterface
@@ -187,7 +195,20 @@ class TextMasterApi
         $errorMsg = '';
         $lineBreaker = 'html' === $format ? '</br>' : "\n";
 
-        $decodedResponse = json_decode($response->getBody()->getContents(), true);
+        try {
+            $decodedResponse = json_decode($response->getBody()->getContents(), true, 512, \JSON_THROW_ON_ERROR);
+        } catch (\Exception) {
+            return $errorMsg;
+        }
+
+        if (
+            !\is_array($decodedResponse)
+            || !isset($decodedResponse['errors'])
+            || !\is_iterable($decodedResponse['errors'])
+        ) {
+            return $errorMsg;
+        }
+
         foreach ($decodedResponse['errors'] as $type => $messagesArray) {
             $errorMsg .= "Type of error: $type ".$lineBreaker;
             if (is_array($messagesArray)) {
@@ -201,6 +222,8 @@ class TextMasterApi
     }
 
     /**
+     * @param array<string, mixed> $payload
+     *
      * @throws GuzzleException
      */
     private function request(string $url, string $method, array $payload = []): ResponseInterface
@@ -210,10 +233,13 @@ class TextMasterApi
         return $this->client->send($request, [RequestOptions::JSON => $payload]);
     }
 
+    /**
+     * @param array{key: string, secret: string, base_uri: string} $options
+     */
     private function createGuzzleClient(array $options): Client
     {
         $stack = HandlerStack::create();
-        $stack->push(Middleware::mapRequest(function (RequestInterface $request) use ($options) {
+        $stack->push(Middleware::mapRequest(static function (RequestInterface $request) use ($options) {
             $date = new \DateTime('now', new \DateTimeZone('UTC'));
 
             return $request
@@ -222,13 +248,16 @@ class TextMasterApi
                 ->withHeader('Signature', sha1($options['secret'].$date->format('Y-m-d H:i:s')))
                 ;
         }));
-        unset($options['key']);
-        unset($options['secret']);
+
+        unset($options['key'], $options['secret']);
         $options = array_merge($options, ['handler' => $stack]);
 
         return new Client($options);
     }
 
+    /**
+     * @param array<string, string> $parameters
+     */
     private function formatUrl(string $url, array $parameters): string
     {
         foreach ($parameters as $placeholder => $value) {
