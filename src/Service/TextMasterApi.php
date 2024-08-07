@@ -33,10 +33,10 @@ class TextMasterApi
         'addDocument' => ['method' => 'POST', 'url' => 'clients/projects/{projectId}/documents'],
         'completeDocument' => ['method' => 'PUT', 'url' => 'clients/projects/{projectId}/documents/{documentId}/complete'],
         'getDocument' => ['method' => 'GET', 'url' => 'clients/projects/{projectId}/documents/{documentId}'],
-        'getAbilities' => ['method'=> 'GET', 'url' => 'clients/abilities?activity=translation&page={page}'],
+        'getAbilities' => ['method' => 'GET', 'url' => 'clients/abilities?activity=translation&page={page}'],
         'getAuthorsForProject' => ['method' => 'GET', 'url' => 'clients/projects/{projectId}/my_authors?status={status}'],
         'getCategories' => ['method' => 'GET', 'url' => 'public/categories'],
-        'setOptions' => ['method' => 'PUT', 'url' => 'clients/projects/{projectId}/activate_tm_options']
+        'setOptions' => ['method' => 'PUT', 'url' => 'clients/projects/{projectId}/activate_tm_options'],
     ];
 
     public function __construct(string $apiKey, string $apiSecret, string $textmasterEnv)
@@ -174,7 +174,7 @@ class TextMasterApi
     public function getAbilities(string $page): ResponseInterface
     {
         $routeParams = self::ROUTES['getAbilities'];
-        $url = $this->formatUrl($routeParams['url'],['{page}' => $page]);
+        $url = $this->formatUrl($routeParams['url'], ['{page}' => $page]);
 
         return $this->request($url, $routeParams['method']);
     }
@@ -204,14 +204,14 @@ class TextMasterApi
         if (
             !\is_array($decodedResponse)
             || !isset($decodedResponse['errors'])
-            || !\is_iterable($decodedResponse['errors'])
+            || !is_iterable($decodedResponse['errors'])
         ) {
             return $errorMsg;
         }
 
         foreach ($decodedResponse['errors'] as $type => $messagesArray) {
-            $errorMsg .= "Type of error: $type ".$lineBreaker;
-            if (is_array($messagesArray)) {
+            $errorMsg .= "Type of error: {$type} ".$lineBreaker;
+            if (\is_array($messagesArray)) {
                 foreach ($messagesArray as $msg) {
                     $errorMsg .= $msg.$lineBreaker;
                 }
@@ -246,7 +246,7 @@ class TextMasterApi
                 ->withHeader('Apikey', $options['key'])
                 ->withHeader('Date', $date->format('Y-m-d H:i:s'))
                 ->withHeader('Signature', sha1($options['secret'].$date->format('Y-m-d H:i:s')))
-                ;
+            ;
         }));
 
         unset($options['key'], $options['secret']);
