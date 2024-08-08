@@ -212,6 +212,7 @@ class TextMasterApi
         foreach ($decodedResponse['errors'] as $type => $messagesArray) {
             $errorMsg .= "Type of error: {$type} ".$lineBreaker;
             if (\is_array($messagesArray)) {
+                /** @var string $msg */
                 foreach ($messagesArray as $msg) {
                     $errorMsg .= $msg.$lineBreaker;
                 }
