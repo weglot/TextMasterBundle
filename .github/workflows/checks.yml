@@ -1,0 +1,39 @@
+name: Checks
+
+on:
+    pull_request:
+        types:
+            - opened
+            - synchronize
+            - reopened
+            - ready_for_review
+
+concurrency:
+    group: ${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    tests:
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  submodules: 1
+
+            - uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.3
+                  tools: composer:v2
+                  ini-file: development
+
+            - run: composer install
+
+            - name: Run php-cs-fixer
+              if: always()
+              run: php vendor/bin/php-cs-fixer --dry-run --diff fix
+
+            - name: Run phpstan
+              if: always()
+              run: php vendor/bin/phpstan
