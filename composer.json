@@ -13,15 +13,15 @@
         "php": ">=8.0",
         "ext-json": "*",
         "guzzlehttp/guzzle": "^7.0",
-        "symfony/config": "^5.4 || ^6.0 || ^7.0",
-        "symfony/dependency-injection": "^5.4 || ^6.0 || ^7.0",
-        "symfony/http-kernel": "^5.4 || ^6.0 || ^7.0"
+        "symfony/config": "^5.4 || ^6.0 || ^7.0 || ^8.0",
+        "symfony/dependency-injection": "^5.4 || ^6.0 || ^7.0 || ^8.0",
+        "symfony/http-kernel": "^5.4 || ^6.0 || ^7.0 || ^8.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "3.60.*",
-        "phpstan/phpstan": "1.11.*",
-        "phpstan/phpstan-strict-rules": "1.6.*",
-        "phpstan/phpstan-symfony": "1.4.*"
+        "friendsofphp/php-cs-fixer": "3.95.*",
+        "phpstan/phpstan": "2.1.*",
+        "phpstan/phpstan-strict-rules": "2.0.*",
+        "phpstan/phpstan-symfony": "2.0.*"
     },
     "autoload": {
         "psr-4": {
