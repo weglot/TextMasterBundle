@@ -15,6 +15,7 @@ return (new PhpCsFixer\Config())
         '@Symfony:risky' => true,
 
         // Override Symfony config
+        'declare_strict_types' => false,
         'method_argument_space' => [
             'after_heredoc' => true,
             'on_multiline' => 'ensure_fully_multiline',
